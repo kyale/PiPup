@@ -18,12 +18,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-
+import nl.rogro82.pipup.PipUpGlideAppModule
 
 // TODO: convert dimensions from px to dp
 
 @SuppressLint("ViewConstructor")
-sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(context) {
+sealed class PopupView(context: Context, private val popup: PopupProps) : LinearLayout(context) {
 
     open fun create() {
         inflate(context, R.layout.popup,this)
@@ -109,7 +109,7 @@ sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(c
                 if(mVideoView.isPlaying) {
                     mVideoView.stopPlayback()
                 }
-            } catch(e: Throwable) {}
+            } catch(_: Throwable) {}
         }
     }
 
@@ -136,8 +136,13 @@ sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(c
                     .load(uri)
                     .timeout(20000)
                     .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Drawable>?, p3: Boolean): Boolean {
-                            Log.e(PiPupService.LOG_TAG, "onLoadFailed", p0)
+                        override fun onLoadFailed(
+                            p0: GlideException?,
+                            p1: Any?,
+                            target: Target<Drawable>,
+                            p3: Boolean
+                        ): Boolean {
+                            Log.e(PipUpService.LOG_TAG, "onLoadFailed", p0)
                             if(p0!=null){
                                 p0.logRootCauses(LOG_TAG)
                                 for (t in p0.causes) {
@@ -150,8 +155,14 @@ sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(c
                             //do something if error loading
                             return false
                         }
-                        override fun onResourceReady(p0: Drawable?, p1: Any?, p2: Target<Drawable>?, p3: DataSource?, p4: Boolean): Boolean {
-                            Log.d(PiPupService.LOG_TAG, "OnResourceReady")
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            model: Any,
+                            p2: Target<Drawable>?,
+                            dataSource: DataSource,
+                            p4: Boolean
+                        ): Boolean {
+                            Log.d(PipUpService.LOG_TAG, "OnResourceReady")
                             //do something when picture already loaded
                             return false
                         }
@@ -192,13 +203,14 @@ sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(c
             try {
                 mImageView?.setImageDrawable(null)
                 media.image.recycle()
-            } catch(e: Throwable) {}
+            } catch(_: Throwable) {}
         }
     }
 
     private class Web(context: Context, popup: PopupProps, val media: PopupProps.Media.Web): PopupView(context, popup) {
         init { create() }
 
+        @SuppressLint("SetJavaScriptEnabled")
         override fun create() {
             super.create()
 

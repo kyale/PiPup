@@ -1,10 +1,5 @@
 package nl.rogro82.pipup
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.res.Resources
-import android.os.Build
 import java.net.Inet4Address
 import java.net.NetworkInterface.getNetworkInterfaces
 import java.net.SocketException
@@ -23,7 +18,7 @@ object Utils {
                     }
                 }
             }
-        } catch (ex: SocketException) {}
+        } catch (_: SocketException) {}
 
         return null
     }

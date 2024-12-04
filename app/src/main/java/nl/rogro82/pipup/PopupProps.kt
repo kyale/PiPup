@@ -30,12 +30,12 @@ data class PopupProps(
         data class Bitmap(val image: android.graphics.Bitmap, val width: Int = DEFAULT_MEDIA_WIDTH): Media()
     }
 
-    enum class Position(index: Int) {
-        TopRight(0),
-        TopLeft(1),
-        BottomRight(2),
-        BottomLeft(3),
-        Center(4)
+    enum class Position {
+        TopRight,
+        TopLeft,
+        BottomRight,
+        BottomLeft,
+        Center
     }
 
     companion object {

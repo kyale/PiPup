@@ -14,26 +14,26 @@
 
 package nl.rogro82.pipup
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
 import nl.rogro82.pipup.Utils.getIpAddress
 
 class MainActivity : Activity() {
+    @Suppress("PropertyName", "MemberVisibilityCanBePrivate")
     var ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Ask permission to draw over other apps
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            askPermission();
+        if (!Settings.canDrawOverlays(this)) {
+            askPermission()
         }
         // start service in foreground
 
@@ -48,7 +48,7 @@ class MainActivity : Activity() {
                     text = resources.getString(
                         R.string.server_address,
                         ipAddress,
-                        PiPupService.SERVER_PORT
+                        PipUpService.PIPUP_SERVER_PORT
                     )
                 }
             }
@@ -59,12 +59,8 @@ class MainActivity : Activity() {
         }
 
 
-        val serviceIntent = Intent(this, PiPupService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
-        }
+        val serviceIntent = Intent(this, PipUpService::class.java)
+        startForegroundService(serviceIntent)
     }
 
     private fun askPermission() {
@@ -74,8 +70,7 @@ class MainActivity : Activity() {
         startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE)
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (!Settings.canDrawOverlays(this)) {

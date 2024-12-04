@@ -5,15 +5,16 @@ apply plugin: 'kotlin-android'
 apply plugin: "kotlin-kapt"
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
     compileOptions {
         sourceCompatibility 17
         targetCompatibility 17
     }
     defaultConfig {
         applicationId "nl.rogro82.pipup"
-        minSdkVersion 24
-        targetSdkVersion 33
+        minSdk 31
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 34
         versionCode 1
         versionName "1"
     }
@@ -24,6 +25,13 @@ android {
         }
     }
     namespace 'nl.rogro82.pipup'
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 dependencies {
@@ -33,15 +41,15 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
 
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
-    implementation 'com.github.bumptech.glide:annotations:4.14.2'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'com.github.bumptech.glide:annotations:4.16.0'
     // Skip this if you don't want to use integration libraries or configure Glide.
-    kapt 'com.github.bumptech.glide:compiler:4.14.2'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
     implementation "com.github.bumptech.glide:okhttp3-integration:4.11.0"
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.10'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.10'
 
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 }

@@ -35,7 +35,7 @@
         </receiver>
 
         <service
-                android:name=".PiPupService"
+                android:name=".PipUpService"
                 android:enabled="true"
                 android:exported="true">
         </service>

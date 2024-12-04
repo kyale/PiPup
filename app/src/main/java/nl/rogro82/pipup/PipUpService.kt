@@ -162,7 +162,7 @@ class PipUpService : Service(), WebServer.Handler {
             val duration = params["duration"]?.toIntOrNull()
                 ?: PopupProps.DEFAULT_DURATION
 
-            val position = PopupProps.Position.values()[params["position"]?.toIntOrNull() ?: 0]
+            val position = PopupProps.Position.entries[params["position"]?.toIntOrNull() ?: 0]
 
             val backgroundColor = params["backgroundColor"]
                 ?: PopupProps.DEFAULT_BACKGROUND_COLOR

@@ -23,7 +23,7 @@ import nl.rogro82.pipup.PipUpGlideAppModule
 // TODO: convert dimensions from px to dp
 
 @SuppressLint("ViewConstructor")
-sealed class PopupView(context: Context, private val popup: PopupProps) : LinearLayout(context) {
+sealed class PopupView(context: Context, val popup: PopupProps) : LinearLayout(context) {
 
     open fun create() {
         inflate(context, R.layout.popup,this)
@@ -208,6 +208,7 @@ sealed class PopupView(context: Context, private val popup: PopupProps) : Linear
     }
 
     private class Web(context: Context, popup: PopupProps, val media: PopupProps.Media.Web): PopupView(context, popup) {
+        var mWebView: WebView? = null
         init { create() }
 
         @SuppressLint("SetJavaScriptEnabled")
@@ -215,7 +216,7 @@ sealed class PopupView(context: Context, private val popup: PopupProps) : Linear
             super.create()
 
             val frame = findViewById<FrameLayout>(R.id.popup_frame)
-            val webView = WebView(context).apply {
+            mWebView = WebView(context).apply {
                 with(settings) {
                     loadWithOverviewMode = true
                     useWideViewPort = true
@@ -233,7 +234,15 @@ sealed class PopupView(context: Context, private val popup: PopupProps) : Linear
                 gravity = Gravity.CENTER
             }
 
-            frame.addView(webView, layoutParams)
+            frame.addView(mWebView, layoutParams)
+        }
+
+        override fun destroy() {
+            mWebView?.also {
+                it.stopLoading()
+                it.loadUrl("about:blank")
+                it.clearFormData()
+            }
         }
     }
 
